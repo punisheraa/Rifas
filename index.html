@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página de Rifas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        header {
+            background: #007BFF;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        main {
+            padding: 2rem;
+        }
+        section {
+            margin-bottom: 2rem;
+        }
+        .button {
+            background: #007BFF;
+            color: white;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Bienvenido a nuestra Rifa</h1>
+        <p>¡Participa y gana premios increíbles!</p>
+    </header>
+
+    <main>
+        <section id="about">
+            <h2>Sobre la Rifa</h2>
+            <p>Selecciona tus números y participa para ganar. ¡Buena suerte!</p>
+            <p>Estamos jugando con: <strong>Lotería Nacional</strong> y <strong>TRIS</strong>.</p>
+            <p id="sales-percentage">Llevamos vendido: 0%.</p>
+        </section>
+
+        <section id="buy">
+            <h2>Compra tus boletos</h2>
+            <form>
+                <label for="number">Selecciona tu número:</label><br>
+                <input type="number" id="number" name="number" min="1" max="100" required><br><br>
+                <label for="name">Tu nombre:</label><br>
+                <input type="text" id="name" name="name" required><br><br>
+                <label for="email">Tu correo:</label><br>
+                <input type="email" id="email" name="email" required><br><br>
+                <button type="submit" class="button">Comprar boleto</button>
+            </form>
+        </section>
+
+        <section id="participants">
+            <h2>Lista de Participantes</h2>
+            <p>Aquí aparecerán los números comprados por cada participante.</p>
+            <ul id="participant-list">
+                <!-- Los participantes se añadirán aquí dinámicamente -->
+            </ul>
+        </section>
+
+        <section id="draw">
+            <h2>Realizar Sorteo</h2>
+            <button class="button" onclick="drawWinner()">Elegir Ganador</button>
+            <p id="winner"></p>
+        </section>
+
+        <section id="contact">
+            <h2>Contacto</h2>
+            <p>¿Tienes dudas? Escríbenos a <a href="mailto:soporte@rifas.com">soporte@rifas.com</a>.</p>
+        </section>
+    </main>
+
+    <script>
+        const participants = [];
+        const totalTickets = 100;
+
+        document.querySelector('form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const number = document.getElementById('number').value;
+            const name = document.getElementById('name').value;
+
+            if (participants.some(p => p.number === number)) {
+                alert('Este número ya ha sido comprado. Por favor, elige otro.');
+                return;
+            }
+
+            participants.push({ number, name });
+
+            const list = document.getElementById('participant-list');
+            const listItem = document.createElement('li');
+            listItem.textContent = `Número ${number}: ${name}`;
+            list.appendChild(listItem);
+
+            updateSalesPercentage();
+
+            alert('¡Boleto comprado con éxito!');
+            event.target.reset();
+        });
+
+        function updateSalesPercentage() {
+            const soldPercentage = Math.round((participants.length / totalTickets) * 100);
+            document.getElementById('sales-percentage').textContent = `Llevamos vendido: ${soldPercentage}%.`;
+        }
+
+        function drawWinner() {
+            if (participants.length === 0) {
+                alert('No hay participantes aún.');
+                return;
+            }
+
+            const winner = participants[Math.floor(Math.random() * participants.length)];
+            document.getElementById('winner').textContent = `El ganador es: ${winner.name} con el número ${winner.number}!`;
+        }
+    </script>
+</body>
+</html>
